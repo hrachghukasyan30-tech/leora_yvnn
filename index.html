@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>LÈORA YVN — Տղամարդկանց հագուստ</title>
+  <meta name="description" content="LÈORA YVN — տղամարդկանց հագուստի օնլայն խանութ։">
+  <meta name="google-site-verification" content="We1WhvKzBnvxb3NxTGKClQxlggbeCFFHcmcy0u6xQGE" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="#">LÈORA <span>YVN</span></a>
+    <nav>
+      <a href="#home">Գլխավոր</a>
+      <a href="#catalog">Տեսականի</a>
+      <a href="#about">Մեր մասին</a>
+      <a href="#contact">Կապ</a>
+    </nav>
+    <a class="cart-link" href="#catalog">Զամբյուղ <b id="cart-count">0</b></a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow">MEN'S COLLECTION · YEREVAN</p>
+        <h1>Ոճը սկսվում է<br><em>քեզնից։</em></h1>
+        <p class="hero-sub">Ժամանակակից տղամարդու հագուստ՝ ամեն օրվա և յուրաքանչյուր առիթի համար։</p>
+        <a class="button light" href="#catalog">Դիտել տեսականին <span>→</span></a>
+      </div>
+      <div class="hero-art" aria-label="Տղամարդկանց նորաձևության մուգ ոճով պատկեր">
+        <div class="art-label">LÈORA<br>YVN</div>
+        <div class="art-caption">NEW SEASON<br><strong>COLLECTION</strong></div>
+      </div>
+    </section>
+
+    <section class="benefits">
+      <div><span>01</span><p>Ընտրված տեսականի</p></div>
+      <div><span>02</span><p>Պատվեր՝ օնլայն</p></div>
+      <div><span>03</span><p>Արագ կապ</p></div>
+    </section>
+
+    <section class="catalog section" id="catalog">
+      <div class="section-heading">
+        <div><p class="eyebrow">LÈORA YVN SELECTION</p><h2>Մեր տեսականին</h2></div>
+        <p>Ընտրիր քո ոճը։</p>
+      </div>
+      <div class="filters" role="group" aria-label="Ապրանքների ֆիլտր">
+        <button class="filter active" data-filter="all">Բոլորը</button>
+        <button class="filter" data-filter="tops">Վերնազգեստ</button>
+        <button class="filter" data-filter="bottoms">Տաբատներ</button>
+        <button class="filter" data-filter="shoes">Կոշիկներ</button>
+        <button class="filter" data-filter="accessories">Աքսեսուարներ</button>
+      </div>
+      <div class="products" id="products"></div>
+    </section>
+
+    <section class="promo" id="about">
+      <p class="eyebrow">LESS, BUT BETTER</p>
+      <h2>Պարզություն։ Որակ։<br><em>Ինքնավստահություն։</em></h2>
+      <p>LÈORA YVN — տղամարդկանց ժամանակակից ոճի ընտրություն։</p>
+    </section>
+
+    <section class="contact section" id="contact">
+      <div><p class="eyebrow">WE'RE HERE TO HELP</p><h2>Պատվիրիր կամ կապվիր մեզ հետ</h2></div>
+      <div class="contact-actions">
+        <a class="button light" href="https://www.instagram.com/leora_yvn/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a class="button outline" href="https://wa.me/37455875005" target="_blank" rel="noopener">WhatsApp ↗</a>
+        <a class="button outline" href="tel:+37455875005">Զանգահարել ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="logo" href="#">LÈORA <span>YVN</span></a>
+    <p>© <span id="year"></span> LÈORA YVN. Բոլոր իրավունքները պաշտպանված են։</p>
+    <a href="https://www.instagram.com/leora_yvn/" target="_blank" rel="noopener">@leora_yvn</a>
+  </footer>
+
+  <div class="cart-drawer" id="cart-drawer" aria-live="polite">
+    <div class="cart-head"><h3>Քո զամբյուղը</h3><button id="close-cart" aria-label="Փակել">×</button></div>
+    <div id="cart-items"><p class="empty">Զամբյուղը դեռ դատարկ է։</p></div>
+    <div class="cart-bottom"><p>Ընդամենը՝ <strong id="cart-total">0 ֏</strong></p><button class="button light full" id="checkout">Պատվիրել WhatsApp-ով</button></div>
+  </div>
+  <div class="scrim" id="scrim"></div>
+  <button class="floating-cart" id="open-cart" aria-label="Բացել զամբյուղը">🛍 <span id="floating-count">0</span></button>
+  <script src="script.js"></script>
+</body>
+</html>
