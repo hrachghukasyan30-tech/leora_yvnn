@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LÈORA YVN Admin</title>
+<style>
+body {
+  background:#f7f3f0;
+  font-family:Arial,sans-serif;
+  padding:25px;
+  text-align:center;
+}
+.container {
+  max-width:400px;
+  margin:50px auto;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+}
+input,button {
+  width:100%;
+  padding:13px;
+  margin:8px 0;
+  box-sizing:border-box;
+}
+button {
+  background:#222;
+  color:white;
+  border:0;
+  border-radius:8px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>LÈORA YVN</h2>
+<h3>Admin Login</h3>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Մուտք գործել</button>
+<p id="message"></p>
+</div>
 
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabase = createClient(
+  'ՔՈ_SUPABASE_PROJECT_URL',
+  'ՔՈ_SUPABASE_ANON_KEY'
+);
+
+window.login = async function() {
+  const {error} = await supabase.auth.signInWithPassword({
+    email: document.getElementById('email').value,
+    password: document.getElementById('password').value
+  });
+
+  document.getElementById('message').textContent =
+    error ? error.message : 'Մուտքը հաջողվեց։';
+};
+</script>
+</body>
+</html>
