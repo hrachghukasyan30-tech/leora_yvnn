@@ -9,7 +9,7 @@
 <style>
 body {
   background: #f7f3f0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   padding: 25px;
   text-align: center;
 }
@@ -51,24 +51,23 @@ button {
   <p id="message"></p>
 </div>
 
-<script type="module">
-import { createClient } from
-'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-const supabase = createClient(
+<script>
+const message = document.getElementById('message');
+const loginBtn = document.getElementById('loginBtn');
+
+const supabase = window.supabase.createClient(
   'https://nsjgrndgeviravyjjbty.supabase.co',
   'sb_publishable_0-U6deQ9_Gedm4zJ8grLqg_DZpTrNUv'
 );
-
-const loginBtn = document.getElementById('loginBtn');
-const message = document.getElementById('message');
 
 loginBtn.addEventListener('click', async () => {
   message.textContent = 'Ստուգվում է...';
   loginBtn.disabled = true;
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: document.getElementById('email').value.trim(),
       password: document.getElementById('password').value
     });
@@ -76,7 +75,6 @@ loginBtn.addEventListener('click', async () => {
     if (error) throw error;
 
     message.textContent = 'Մուտքը հաջողվեց։';
-
   } catch (error) {
     message.textContent = 'Սխալ՝ ' + error.message;
   } finally {
@@ -86,4 +84,5 @@ loginBtn.addEventListener('click', async () => {
 </script>
 </body>
 </html>
+
 
