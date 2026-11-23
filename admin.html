@@ -1,65 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="hy">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LÈORA YVN Admin</title>
+
 <style>
 body {
-  background:#f7f3f0;
-  font-family:Arial;
-  padding:25px;
-  text-align:center;
+  background: #f7f3f0;
+  font-family: Arial;
+  padding: 25px;
+  text-align: center;
 }
 .container {
-  max-width:400px;
-  margin:50px auto;
-  background:white;
-  padding:25px;
-  border-radius:15px;
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
 }
-input,button {
-  width:100%;
-  padding:13px;
-  margin:8px 0;
-  box-sizing:border-box;
+input, button {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  box-sizing: border-box;
 }
 button {
-  background:#222;
-  color:white;
-  border:0;
-  border-radius:8px;
+  background: #222;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#message {
+  overflow-wrap: anywhere;
 }
 </style>
 </head>
+
 <body>
 <div class="container">
-<h2>LÈORA YVN</h2>
-<h3>Admin Login</h3>
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-<button id="loginBtn">Մուտք գործել</button>
-<p id="message"></p>
+  <h2>LÈORA YVN</h2>
+  <h3>Admin Login</h3>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button id="loginBtn">Մուտք գործել</button>
+  <p id="message"></p>
 </div>
 
 <script type="module">
 import { createClient } from
-'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const supabase = createClient(
-'https://nsjgrndgeviravyjjbty.supabase.co',
-'
-sb_publishable_0-U6deQ9_Gedm4zJ8grLqg_DZpTrNUv'
+  'https://nsjgrndgeviravyjjbty.supabase.co',
+  'sb_publishable_0-U6deQ9_Gedm4zJ8grLqg_DZpTrNUv'
 );
 
-document.getElementById('loginBtn').onclick = async () => {
- const {error} = await supabase.auth.signInWithPassword({
-  email: document.getElementById('email').value,
-  password: document.getElementById('password').value
- });
- document.getElementById('message').textContent =
- error ? error.message : 'Մուտքը հաջողվեց։';
-};
+const loginBtn = document.getElementById('loginBtn');
+const message = document.getElementById('message');
+
+loginBtn.addEventListener('click', async () => {
+  message.textContent = 'Ստուգվում է...';
+  loginBtn.disabled = true;
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: document.getElementById('email').value.trim(),
+      password: document.getElementById('password').value
+    });
+
+    if (error) throw error;
+
+    message.textContent = 'Մուտքը հաջողվեց։';
+
+  } catch (error) {
+    message.textContent = 'Սխալ՝ ' + error.message;
+  } finally {
+    loginBtn.disabled = false;
+  }
+});
 </script>
 </body>
 </html>
+
