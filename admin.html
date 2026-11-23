@@ -7,7 +7,7 @@
 <style>
 body {
   background:#f7f3f0;
-  font-family:Arial,sans-serif;
+  font-family:Arial;
   padding:25px;
   text-align:center;
 }
@@ -38,7 +38,7 @@ button {
 <h3>Admin Login</h3>
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
-<button onclick="login()">Մուտք գործել</button>
+<button id="loginBtn">Մուտք գործել</button>
 <p id="message"></p>
 </div>
 
@@ -47,18 +47,18 @@ import { createClient } from
 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const supabase = createClient(
-  'ՔՈ_SUPABASE_PROJECT_URL',
-  'ՔՈ_SUPABASE_ANON_KEY'
+'https://nsjgrndgeviravyjjbty.supabase.co',
+'
+sb_publishable_0-U6deQ9_Gedm4zJ8grLqg_DZpTrNUv'
 );
 
-window.login = async function() {
-  const {error} = await supabase.auth.signInWithPassword({
-    email: document.getElementById('email').value,
-    password: document.getElementById('password').value
-  });
-
-  document.getElementById('message').textContent =
-    error ? error.message : 'Մուտքը հաջողվեց։';
+document.getElementById('loginBtn').onclick = async () => {
+ const {error} = await supabase.auth.signInWithPassword({
+  email: document.getElementById('email').value,
+  password: document.getElementById('password').value
+ });
+ document.getElementById('message').textContent =
+ error ? error.message : 'Մուտքը հաջողվեց։';
 };
 </script>
 </body>
