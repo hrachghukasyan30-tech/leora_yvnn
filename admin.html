@@ -8,81 +8,224 @@
 
 <style>
 body {
-  background: #f7f3f0;
-  font-family: Arial, sans-serif;
-  padding: 25px;
-  text-align: center;
+  background:#f7f3f0;
+  font-family:Arial,sans-serif;
+  padding:20px;
 }
 .container {
-  max-width: 400px;
-  margin: 50px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
+  max-width:500px;
+  margin:25px auto;
+  background:white;
+  padding:20px;
+  border-radius:15px;
 }
-input, button {
-  width: 100%;
-  padding: 13px;
-  margin: 8px 0;
-  box-sizing: border-box;
+input, textarea, button {
+  width:100%;
+  padding:12px;
+  margin:7px 0;
+  box-sizing:border-box;
 }
 button {
-  background: #222;
-  color: white;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
+  background:#222;
+  color:white;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
 }
-#message {
-  overflow-wrap: anywhere;
+.product {
+  border:1px solid #ddd;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
 }
+.product img {
+  max-width:100%;
+  max-height:150px;
+  object-fit:contain;
+}
+#dashboard { display:none; }
+#message { overflow-wrap:anywhere; }
 </style>
 </head>
 
 <body>
-<div class="container">
+
+<div class="container" id="loginBox">
   <h2>LÈORA YVN</h2>
   <h3>Admin Login</h3>
-
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
-
   <button id="loginBtn">Մուտք գործել</button>
   <p id="message"></p>
 </div>
 
+<div class="container" id="dashboard">
+  <h2>LÈORA YVN</h2>
+  <h3>Admin վահանակ</h3>
+
+  <h3>Ավելացնել ապրանք</h3>
+  <input id="name" placeholder="Ապրանքի անունը">
+  <input id="price" type="number" placeholder="Գինը">
+  <input id="category" placeholder="Կատեգորիա">
+  <textarea id="description" placeholder="Նկարագրություն"></textarea>
+  <input id="image_url" placeholder="Նկարի հղումը">
+  <input id="sizes" placeholder="Չափսեր, օրինակ՝ S, M, L">
+  <button id="addBtn">Ավելացնել ապրանքը</button>
+
+  <p id="productMessage"></p>
+
+  <hr>
+  <h3>Ապրանքների ցանկ</h3>
+  <div id="products"></div>
+
+  <button id="logoutBtn">Դուրս գալ</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const message = document.getElementById('message');
-const loginBtn = document.getElementById('loginBtn');
-
 const supabase = window.supabase.createClient(
   'https://nsjgrndgeviravyjjbty.supabase.co',
   'sb_publishable_0-U6deQ9_Gedm4zJ8grLqg_DZpTrNUv'
 );
 
-loginBtn.addEventListener('click', async () => {
+const loginBox = document.getElementById('loginBox');
+const dashboard = document.getElementById('dashboard');
+const message = document.getElementById('message');
+
+async function showDashboard() {
+  loginBox.style.display = 'none';
+  dashboard.style.display = 'block';
+  await loadProducts();
+}
+
+document.getElementById('loginBtn').onclick = async () => {
   message.textContent = 'Ստուգվում է...';
-  loginBtn.disabled = true;
 
-  try {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: document.getElementById('email').value.trim(),
-      password: document.getElementById('password').value
-    });
+  const { error } = await supabase.auth.signInWithPassword({
+    email: document.getElementById('email').value.trim(),
+    password: document.getElementById('password').value
+  });
 
-    if (error) throw error;
-
-    message.textContent = 'Մուտքը հաջողվեց։';
-  } catch (error) {
+  if (error) {
     message.textContent = 'Սխալ՝ ' + error.message;
-  } finally {
-    loginBtn.disabled = false;
+    return;
   }
+
+  await showDashboard();
+};
+
+async function loadProducts() {
+  const area = document.getElementById('products');
+  area.textContent = 'Բեռնվում է...';
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('id', { ascending: false });
+
+  if (error) {
+    area.textContent = 'Սխալ՝ ' + error.message;
+    return;
+  }
+
+  area.innerHTML = '';
+
+  data.forEach(product => {
+    const item = document.createElement('div');
+    item.className = 'product';
+
+    const title = document.createElement('h4');
+    title.textContent = product.name;
+
+    const price = document.createElement('p');
+    price.textContent = 'Գին՝ ' + product.price;
+
+    item.append(title, price);
+
+    if (product.image_url) {
+      const img = document.createElement('img');
+      img.src = product.image_url;
+      img.alt = product.name;
+      item.appendChild(img);
+    }
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Ջնջել';
+    deleteBtn.onclick = () => deleteProduct(product.id);
+
+    item.appendChild(deleteBtn);
+    area.appendChild(item);
+  });
+}
+
+document.getElementById('addBtn').onclick = async () => {
+  const product = {
+    name: document.getElementById('name').value.trim(),
+    price: Number(document.getElementById('price').value),
+    category: document.getElementById('category').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    image_url: document.getElementById('image_url').value.trim(),
+    sizes: document.getElementById('sizes').value
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean)
+  };
+
+  const result = document.getElementById('productMessage');
+
+  if (!product.name || !product.price || product.price <= 0) {
+    result.textContent = 'Լրացրու ապրանքի անունը և ճիշտ գինը։';
+    return;
+  }
+
+  const { error } = await supabase.from('products').insert(product);
+
+  if (error) {
+    result.textContent = 'Սխալ՝ ' + error.message;
+    return;
+  }
+
+  result.textContent = 'Ապրանքը ավելացվեց։';
+  document.getElementById('name').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('category').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('image_url').value = '';
+  document.getElementById('sizes').value = '';
+
+  await loadProducts();
+};
+
+async function deleteProduct(id) {
+  if (!confirm('Ջնջե՞լ այս ապրանքը։')) return;
+
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert('Սխալ՝ ' + error.message);
+    return;
+  }
+
+  await loadProducts();
+}
+
+document.getElementById('logoutBtn').onclick = async () => {
+  await supabase.auth.signOut();
+  dashboard.style.display = 'none';
+  loginBox.style.display = 'block';
+  message.textContent = 'Դուրս եկար համակարգից։';
+};
+
+supabase.auth.getSession().then(({ data }) => {
+  if (data.session) showDashboard();
 });
 </script>
+
 </body>
 </html>
+
 
 
